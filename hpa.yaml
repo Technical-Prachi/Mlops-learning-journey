@@ -1,0 +1,22 @@
+# Horizontal Pod Autoscaler for the Iris API.
+# Scenario 1 used maxReplicas: 3 (pods scaled out under load).
+# Scenario 2 (bottleneck test) used maxReplicas: 1 to show CPU saturation.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: iris-api
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: iris-api
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50

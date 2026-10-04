@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: iris-api
+  labels:
+    app: iris-api
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: iris-api
+
+  template:
+    metadata:
+      labels:
+        app: iris-api
+
+    spec:
+      containers:
+      - name: iris-api
+        image: us-central1-docker.pkg.dev/<PROJECT_ID>/iris-repo/iris-api:latest
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8000
+
+        resources:
+          requests:
+            cpu: "25m"
+            memory: "64Mi"
+
+          limits:
+            cpu: "100m"
+            memory: "256Mi"
+
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

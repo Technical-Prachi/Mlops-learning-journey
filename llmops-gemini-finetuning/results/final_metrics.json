@@ -1,0 +1,42 @@
+{
+  "V1": {
+    "model": "V1",
+    "accuracy": 0.5666666666666667,
+    "format_compliance": 0.0,
+    "total": 30,
+    "per_class": {
+      "setosa": {
+        "precision": 0.5263157894736842,
+        "recall": 1.0
+      },
+      "versicolor": {
+        "precision": 0.42857142857142855,
+        "recall": 0.3
+      },
+      "virginica": {
+        "precision": 1.0,
+        "recall": 0.4
+      }
+    }
+  },
+  "V2": {
+    "model": "V2",
+    "accuracy": 0.36666666666666664,
+    "format_compliance": 0.0,
+    "total": 30,
+    "per_class": {
+      "setosa": {
+        "precision": 0.35714285714285715,
+        "recall": 1.0
+      },
+      "versicolor": {
+        "precision": 0,
+        "recall": 0.0
+      },
+      "virginica": {
+        "precision": 0.5,
+        "recall": 0.1
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+Metric,Value
+Injection Block Rate,100.00%
+Leakage Block Rate,100.00%
+V1 False Positive Rate,0.00%
+V2 False Positive Rate,0.00%
+V1 Baseline Accuracy,0.5666666666666667
+V1 Guarded Accuracy,0.9666666666666667
+V1 Accuracy Delta,0.4
+V1 Input Blocks,0
+V1 Output Blocks,0
+V1 Model Errors,0
+V2 Baseline Accuracy,0.36666666666666664
+V2 Guarded Accuracy,0.8
+V2 Accuracy Delta,0.4333333333333334
+V2 Input Blocks,0
+V2 Output Blocks,4
+V2 Model Errors,0

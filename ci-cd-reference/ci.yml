@@ -1,0 +1,56 @@
+name: MLOps CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
+          pip install dvc[gcs]
+
+
+#      - name: Pull DVC Data
+ #       run: |
+  #        dvc pull
+
+      - name: Run Tests
+        run: |
+          pytest -v | tee report.txt
+
+
+      - name: Setup CML
+        if: github.event_name == 'pull_request'
+        uses: iterative/setup-cml@v2
+
+      - name: Publish Test Report
+        if: github.event_name == 'pull_request'
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "# CI Test Report" > cml_report.md
+          cat report.txt >> cml_report.md
+          cml comment create cml_report.md

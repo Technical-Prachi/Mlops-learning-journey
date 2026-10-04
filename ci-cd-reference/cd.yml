@@ -1,0 +1,71 @@
+name: Deploy IRIS API
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: <PROJECT_ID>
+  GAR_LOCATION: us-central1
+  REPOSITORY: iris-repo
+  IMAGE: iris-api
+  CLUSTER: iris-cluster
+  ZONE: us-central1-a
+
+jobs:
+  deploy:
+    name: Deploy to GKE
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          install_components: gke-gcloud-auth-plugin
+
+      - name: Enable GKE Auth Plugin
+        run: |
+          echo "USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker ${GAR_LOCATION}-docker.pkg.dev --quiet
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+          -t ${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE}:${{ github.sha }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push \
+          ${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE}:${{ github.sha }}
+
+      - name: Connect to GKE
+        run: |
+          gcloud container clusters get-credentials ${CLUSTER} \
+          --zone ${ZONE} \
+          --project ${PROJECT_ID}
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/iris-api \
+          iris-api=${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${REPOSITORY}/${IMAGE}:${{ github.sha }}
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/iris-api

@@ -142,4 +142,4 @@ An early version of this work committed a service account key to a public reposi
 ## Author
 
 **Prachi Kushwaha**, BS Data Science and Applications, IIT Madras
-[GitHub](https://github.com/Technical-Prachi) | [LinkedIn](https://www.linkedin.com/in/YOUR-LINKEDIN-ID)
+[GitHub](https://github.com/Technical-Prachi) | [LinkedIn](https://www.linkedin.com/in/prachi-kushwaha-a79a09274)
